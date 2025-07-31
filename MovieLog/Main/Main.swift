@@ -19,7 +19,7 @@ class Main: BaseView {
     }()
     
     private let nickName = {
-        let label = Label(size: 17, weight: .bold, alignment: .left)
+        let label = Label(size: 18, weight: .bold, alignment: .left)
         label.text = "달콤한 기모청바지"
         return label
     }()
@@ -41,11 +41,41 @@ class Main: BaseView {
         return button
     }()
     
+    private let recentSearch = {
+        let label = Label(size: 18, weight: .bold, alignment: .left)
+        label.text = "최근 검색어"
+        return label
+    }()
+    
+    private let searchList = {
+        let layout = UICollectionViewFlowLayout()
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .red
+        return cv
+    }()
+    
+    private let todayMovie = {
+        let label = Label(size: 18, weight: .bold, alignment: .left)
+        label.text = "오늘의 영화"
+        return label
+    }()
+    
+    private let movieList = {
+        let layout = UICollectionViewFlowLayout()
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .orange
+        return cv
+    }()
+    
     override func configureHierarchy() {
         addSubview(infoBox)
         addSubview(nickName)
         addSubview(date)
         addSubview(likeCount)
+        addSubview(recentSearch)
+        addSubview(searchList)
+        addSubview(todayMovie)
+        addSubview(movieList)
     }
     
     override func configureLayout() {
@@ -54,21 +84,36 @@ class Main: BaseView {
             make.horizontalEdges.equalToSuperview().inset(10)
             make.height.equalTo(120)
         }
-        
         nickName.snp.makeConstraints { make in
             make.top.equalTo(infoBox.snp.top).offset(20)
             make.leading.equalTo(infoBox.snp.leading).offset(20)
         }
-        
         date.snp.makeConstraints { make in
             make.centerY.equalTo(nickName.snp.centerY)
             make.trailing.equalTo(infoBox.snp.trailing).offset(-20)
         }
-        
         likeCount.snp.makeConstraints { make in
             make.top.equalTo(nickName.snp.bottom).offset(20)
             make.horizontalEdges.equalTo(infoBox.snp.horizontalEdges).inset(20)
             make.height.equalTo(44)
+        }
+        recentSearch.snp.makeConstraints { make in
+            make.top.equalTo(infoBox.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(15)
+        }
+        searchList.snp.makeConstraints { make in
+            make.top.equalTo(recentSearch.snp.bottom)
+            make.horizontalEdges.equalToSuperview()
+            make.height.equalTo(80)
+        }
+        todayMovie.snp.makeConstraints { make in
+            make.top.equalTo(searchList.snp.bottom)
+            make.leading.equalToSuperview().offset(15)
+        }
+        movieList.snp.makeConstraints { make in
+            make.top.equalTo(todayMovie.snp.bottom)
+            make.horizontalEdges.equalToSuperview()
+            make.bottom.equalTo(safeAreaLayoutGuide)
         }
     }
 }

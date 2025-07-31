@@ -10,7 +10,7 @@ import SnapKit
 
 class NicknameDetail: BaseView {
 
-    private let textField = {
+    let textField = {
         let tf = UITextField()
         tf.placeholder = "닉네임을 입력하세요"
         tf.textColor = .white
@@ -21,6 +21,13 @@ class NicknameDetail: BaseView {
         let view = UIView()
         view.backgroundColor = .white
         return view
+    }()
+    
+    let status = {
+        let label = UILabel()
+        label.textColor = UIColor(hex: "98FB98")
+        label.font = .systemFont(ofSize: 10)
+        return label
     }()
     
     override func configureHierarchy() {

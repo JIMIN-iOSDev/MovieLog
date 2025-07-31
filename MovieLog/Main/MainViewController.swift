@@ -31,5 +31,7 @@ class MainViewController: UIViewController {
     
     @objc func searchButtonTapped() {
         navigationController?.pushViewController(SearchViewController(), animated: true)
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
     }
 }

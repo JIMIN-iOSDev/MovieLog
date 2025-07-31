@@ -9,8 +9,15 @@ import UIKit
 
 class SearchViewController: UIViewController {
 
+    private let mainView = Search()
+    
+    override func loadView() {
+        self.view = mainView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        navigationItem.title = "영화 검색"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
 }

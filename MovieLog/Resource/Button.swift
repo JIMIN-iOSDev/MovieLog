@@ -10,9 +10,9 @@ import UIKit
 class Button: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setTitleColor(.green, for: .normal)
+        setTitleColor(UIColor(hex: "98FB98"), for: .normal)
         backgroundColor = .clear
-        layer.borderColor = UIColor.green.cgColor
+        layer.borderColor = UIColor(hex: "98FB98").cgColor
         layer.borderWidth = 2
         layer.cornerRadius = 20
         clipsToBounds = true

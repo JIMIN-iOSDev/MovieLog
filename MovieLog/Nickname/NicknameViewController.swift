@@ -26,6 +26,6 @@ class NicknameViewController: UIViewController {
         let vc = NicknameDetailViewController()
         navigationController?.pushViewController(vc, animated: true)
         navigationItem.backButtonTitle = ""
-        navigationController?.navigationBar.tintColor = .green
+        navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
     }
 }

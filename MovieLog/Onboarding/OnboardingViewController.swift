@@ -24,6 +24,6 @@ class OnboardingViewController: UIViewController {
         let vc = NicknameViewController()
         navigationController?.pushViewController(vc, animated: true)
         navigationItem.backButtonTitle = ""
-        navigationController?.navigationBar.tintColor = .green
+        navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
     }
 }

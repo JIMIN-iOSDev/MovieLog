@@ -17,7 +17,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "MovieLog"
+        navigationItem.title = "MovieLog"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
 }

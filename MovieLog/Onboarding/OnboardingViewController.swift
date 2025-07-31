@@ -9,7 +9,7 @@ import UIKit
 
 class OnboardingViewController: UIViewController {
 
-    let mainView = Onboarding()
+    private let mainView = Onboarding()
     
     override func loadView() {
         self.view = mainView
@@ -23,5 +23,7 @@ class OnboardingViewController: UIViewController {
     @objc func startButtonTapped() {
         let vc = NicknameViewController()
         navigationController?.pushViewController(vc, animated: true)
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .green
     }
 }

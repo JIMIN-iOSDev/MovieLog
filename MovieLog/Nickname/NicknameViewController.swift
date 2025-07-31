@@ -9,20 +9,23 @@ import UIKit
 
 class NicknameViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    private let mainView = Nickname()
+    
+    override func loadView() {
+        self.view = mainView
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "닉네임 설정"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        mainView.editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
-    */
-
+    
+    @objc func editButtonTapped() {
+        let vc = NicknameDetailViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .green
+    }
 }

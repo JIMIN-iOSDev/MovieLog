@@ -25,7 +25,7 @@ class Onboarding: BaseView {
     }()
     
     private let explain = {
-        let label = Label(size: 20, weight: .regular, alignment: .center)
+        let label = Label(size: 17, weight: .regular, alignment: .center)
         label.text = "당신만의 영화 세상,\nMovieLog를 시작해보세요"
         label.textColor = .gray
         label.numberOfLines = 2
@@ -53,7 +53,7 @@ class Onboarding: BaseView {
         }
         
         title.snp.makeConstraints { make in
-            make.top.equalTo(image.snp.bottom).offset(120)
+            make.top.equalTo(image.snp.bottom).offset(110)
             make.centerX.equalToSuperview()
         }
         

@@ -73,7 +73,7 @@ class Setting: BaseView {
         return line
     }()
     
-    private let delete = {
+    let delete = {
         let button = SettingButton(title: "탈퇴하기")
         return button
     }()

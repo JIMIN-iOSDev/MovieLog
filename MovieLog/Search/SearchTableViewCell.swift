@@ -24,14 +24,12 @@ class SearchTableViewCell: UITableViewCell {
     
     private let title = {
         let label = Label(size: 17, weight: .bold, alignment: .left)
-        label.text = "제목"
         label.numberOfLines = 2
         return label
     }()
     
     private let date = {
-        let label = Label(size: 15, weight: .regular, alignment: .left)
-        label.text = "8888.88.88"
+        let label = Label(size: 13, weight: .regular, alignment: .left)
         return label
     }()
     
@@ -64,20 +62,21 @@ class SearchTableViewCell: UITableViewCell {
     
     func configureLayout() {
         poster.snp.makeConstraints { make in
-            make.verticalEdges.leading.equalToSuperview().inset(15)
-            make.width.equalTo(70)
+            make.verticalEdges.equalToSuperview().inset(15)
+            make.leading.equalToSuperview()
+            make.width.equalTo(80)
         }
         title.snp.makeConstraints { make in
             make.top.equalTo(poster.snp.top).offset(4)
-            make.leading.equalTo(poster.snp.trailing).offset(8)
-            make.trailing.equalToSuperview().offset(-15)
+            make.leading.equalTo(poster.snp.trailing).offset(20)
+            make.trailing.equalToSuperview()
         }
         date.snp.makeConstraints { make in
             make.top.equalTo(title.snp.bottom).offset(4)
             make.leading.equalTo(title.snp.leading)
         }
         likeButton.snp.makeConstraints { make in
-            make.trailing.bottom.equalToSuperview().offset(-15)
+            make.trailing.bottom.equalToSuperview()
         }
     }
     
@@ -86,7 +85,8 @@ class SearchTableViewCell: UITableViewCell {
     }
     
     func configureData(row: Result) {
-        let url = URL(string: row.poster_path)
+        let baseURL = "https://image.tmdb.org/t/p/w500"
+        let url = URL(string: baseURL + row.poster_path)
         poster.kf.setImage(with: url)
         title.text = row.title
         date.text = row.release_date

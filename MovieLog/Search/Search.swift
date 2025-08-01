@@ -37,13 +37,13 @@ class Search: BaseView {
             make.horizontalEdges.equalToSuperview()
         }
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(10)
+            make.top.equalTo(searchBar.snp.bottom)
             make.horizontalEdges.equalToSuperview().inset(10)
-            make.bottom.equalTo(safeAreaLayoutGuide)
+            make.bottom.equalTo(safeAreaLayoutGuide).offset(-4)
         }
     }
     
     override func configureView() {
-        tableView.rowHeight = 100
+        tableView.rowHeight = 130
     }
 }

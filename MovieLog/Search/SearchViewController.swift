@@ -63,5 +63,7 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         list.removeAll()
         callRequest(query: mainView.searchBar.text!)
+        mainView.searchBar.text = ""
+        view.endEditing(true)
     }
 }

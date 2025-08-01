@@ -1,5 +1,5 @@
 //
-//  Search.swift
+//  Empty.swift
 //  MovieLog
 //
 //  Created by Jimin on 8/1/25.
@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-class Search: BaseView {
-    
+class Empty: BaseView {
+
     let searchBar = {
         let sb = UISearchBar()
         sb.searchBarStyle = .minimal
@@ -19,16 +19,8 @@ class Search: BaseView {
         return sb
     }()
     
-    let tableView = {
-        let tv = UITableView()
-        tv.backgroundColor = .clear
-        tv.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.identifier)
-        return tv
-    }()
-    
     override func configureHierarchy() {
         addSubview(searchBar)
-        addSubview(tableView)
     }
     
     override func configureLayout() {
@@ -36,14 +28,5 @@ class Search: BaseView {
             make.top.equalTo(safeAreaLayoutGuide)
             make.horizontalEdges.equalToSuperview()
         }
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.horizontalEdges.equalToSuperview().inset(10)
-            make.bottom.equalTo(safeAreaLayoutGuide)
-        }
-    }
-    
-    override func configureView() {
-        tableView.rowHeight = 100
     }
 }

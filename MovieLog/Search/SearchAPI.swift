@@ -9,6 +9,7 @@ import Foundation
 
 struct SearchResult: Decodable {
     let results: [Result]
+    let total_pages: Int
     let total_results: Int
 }
 

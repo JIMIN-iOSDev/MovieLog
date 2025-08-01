@@ -12,6 +12,8 @@ class SearchViewController: UIViewController {
 
     private let mainView = Search()
     var list: [Result] = []
+    var page = 1
+    var isEnd = false
     var text: String?
     
     override func loadView() {
@@ -30,7 +32,7 @@ class SearchViewController: UIViewController {
     }
     
     func callRequest(query: String) {
-        let url = "https://api.themoviedb.org/3/search/movie?query=\(query)&include_adult=false&language=ko-KR&page=1"
+        let url = "https://api.themoviedb.org/3/search/movie?query=\(query)&include_adult=false&language=ko-KR&page=\(page)"
         let header: HTTPHeaders = [
             "Authorization": "Bearer \(APIKey.TMDBToken)"
         ]
@@ -38,10 +40,18 @@ class SearchViewController: UIViewController {
             .responseDecodable(of: SearchResult.self) { response in
                 switch response.result {
                 case .success(let value):
+                    if self.page < value.total_pages {
+                        self.isEnd = false
+                    } else {
+                        self.isEnd = true
+                    }
                     self.list.append(contentsOf: value.results)
                     self.mainView.tableView.reloadData()
+                    if self.page == 1 {
+                        self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    }
                 case .failure(let error):
-                    print("fail")
+                    print("fail: \(error)")
             }
         }
     }
@@ -57,12 +67,21 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configureData(row: list[indexPath.row])
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == (list.count - 3) && isEnd == false {
+            page += 1
+            callRequest(query: text!)
+        }
+    }
 }
 
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         list.removeAll()
-        callRequest(query: mainView.searchBar.text!)
+        page = 1
+        self.text = mainView.searchBar.text
+        callRequest(query: text!)
         mainView.searchBar.text = ""
         view.endEditing(true)
     }

@@ -26,7 +26,7 @@ class TabBarViewController: UITabBarController {
         secondVC.tabBarItem.image = UIImage(systemName: "film.stack")
         secondVC.tabBarItem.title = "UPCOMING"
         
-        let thirdVC = SettingViewController()
+        let thirdVC = UINavigationController(rootViewController: SettingViewController())
         thirdVC.tabBarItem.image = UIImage(systemName: "person.crop.circle")
         thirdVC.tabBarItem.title = "PROFILE"
         

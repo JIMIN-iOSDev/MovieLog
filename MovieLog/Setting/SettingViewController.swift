@@ -9,8 +9,15 @@ import UIKit
 
 class SettingViewController: UIViewController {
 
+    private let mainView = Setting()
+    
+    override func loadView() {
+        self.view = mainView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        navigationItem.title = "설정"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
 }

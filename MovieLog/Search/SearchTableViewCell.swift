@@ -9,13 +9,12 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class SearchTableViewCell: UITableViewCell {
+class SearchTableViewCell: BaseTableViewCell {
 
     static let identifier = "SearchTableViewCell"
     
     private let poster = {
         let image = UIImageView()
-        image.backgroundColor = .orange
         image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = 10
         image.clipsToBounds = true
@@ -41,26 +40,14 @@ class SearchTableViewCell: UITableViewCell {
         return button
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureHierarchy()
-        configureLayout()
-        configureView()
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(poster)
         contentView.addSubview(title)
         contentView.addSubview(date)
         contentView.addSubview(likeButton)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         poster.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview().inset(15)
             make.leading.equalToSuperview()
@@ -76,12 +63,13 @@ class SearchTableViewCell: UITableViewCell {
             make.leading.equalTo(title.snp.leading)
         }
         likeButton.snp.makeConstraints { make in
-            make.trailing.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-15)
         }
     }
     
-    func configureView() {
-        backgroundColor = .clear
+    override func configureView() {
+        super.configureView()
     }
     
     func configureData(row: Result) {

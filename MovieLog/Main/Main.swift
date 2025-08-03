@@ -47,12 +47,21 @@ class Main: BaseView {
         return label
     }()
     
-    private let searchList = {
-        let layout = UICollectionViewFlowLayout()
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .red
+    let searchList = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: recentLayout())
+        cv.backgroundColor = .clear
+        cv.register(RecentSearchCollectionViewCell.self, forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
         return cv
     }()
+    
+    static func recentLayout() -> UICollectionViewFlowLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.itemSize = CGSize(width: 85, height: 35)
+        layout.sectionInset = UIEdgeInsets(top: 4, left: 10, bottom: 10, right: 10)
+        return layout
+    }
     
     private let todayMovie = {
         let label = Label(size: 18, weight: .bold, alignment: .left)

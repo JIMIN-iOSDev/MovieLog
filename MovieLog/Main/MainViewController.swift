@@ -22,6 +22,8 @@ class MainViewController: UIViewController {
         configureNav()
         callRequest()
         
+        mainView.searchList.delegate = self
+        mainView.searchList.dataSource = self
         mainView.movieList.delegate = self
         mainView.movieList.dataSource = self
     }
@@ -61,13 +63,22 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return list.count
+        if collectionView == mainView.searchList {
+            return 10
+        } else {
+            return list.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.identifier, for: indexPath) as! TodayMovieCollectionViewCell
-        cell.configureData(row: list[indexPath.row])
-        return cell
+        if collectionView == mainView.searchList {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as! RecentSearchCollectionViewCell
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.identifier, for: indexPath) as! TodayMovieCollectionViewCell
+            cell.configureData(row: list[indexPath.row])
+            return cell
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

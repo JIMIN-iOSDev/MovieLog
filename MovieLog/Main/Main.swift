@@ -70,7 +70,7 @@ class Main: BaseView {
     static func layout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 15
+        layout.minimumLineSpacing = 20
         layout.itemSize = CGSize(width: 210, height: 370)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 4, right: 10)
         return layout

@@ -20,6 +20,7 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupHeader()
+        setupTableViewCell()
         
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
@@ -41,6 +42,11 @@ class DetailViewController: UIViewController {
     private func setupHeader() {
         mainView.tableView.register(DetailTableViewHeader.self, forHeaderFooterViewReuseIdentifier: DetailTableViewHeader.identifier)
     }
+    
+    private func setupTableViewCell() {
+        mainView.tableView.register(SynopsisTitleTableViewCell.self, forCellReuseIdentifier: SynopsisTitleTableViewCell.identifier)
+        mainView.tableView.register(CastTitleTableViewCell.self, forCellReuseIdentifier: CastTitleTableViewCell.identifier)
+    }
 }
 
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
@@ -49,7 +55,22 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 1 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: SynopsisTitleTableViewCell.identifier, for: indexPath) as! SynopsisTitleTableViewCell
+            return cell
+        } else if indexPath.row == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: CastTitleTableViewCell.identifier, for: indexPath) as! CastTitleTableViewCell
+            return cell
+        }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 3 {
+            return 44
+        } else {
+            return 100
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

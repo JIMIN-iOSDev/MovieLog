@@ -47,6 +47,15 @@ class Main: BaseView {
         return label
     }()
     
+    private let deleteAll = {
+        let button = UIButton()
+        button.setTitle("전체 삭제", for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
+        button.setTitleColor(UIColor(hex: "98FB98"), for: .normal)
+        button.backgroundColor = .clear
+        return button
+    }()
+    
     let searchList = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: recentLayout())
         cv.backgroundColor = .clear
@@ -91,6 +100,7 @@ class Main: BaseView {
         addSubview(date)
         addSubview(likeCount)
         addSubview(recentSearch)
+        addSubview(deleteAll)
         addSubview(searchList)
         addSubview(todayMovie)
         addSubview(movieList)
@@ -118,6 +128,10 @@ class Main: BaseView {
         recentSearch.snp.makeConstraints { make in
             make.top.equalTo(infoBox.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(15)
+        }
+        deleteAll.snp.makeConstraints { make in
+            make.centerY.equalTo(recentSearch.snp.centerY)
+            make.trailing.equalToSuperview().offset(-15)
         }
         searchList.snp.makeConstraints { make in
             make.top.equalTo(recentSearch.snp.bottom)

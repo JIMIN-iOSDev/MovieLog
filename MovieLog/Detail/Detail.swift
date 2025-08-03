@@ -11,8 +11,10 @@ import SnapKit
 class Detail: BaseView {
 
     let tableView = {
-        let tv = UITableView()
-        tv.backgroundColor = .yellow
+        let tv = UITableView(frame: CGRect.zero, style: .grouped)
+        tv.sectionHeaderHeight = 270
+        tv.sectionFooterHeight = 0
+        tv.backgroundColor = .clear
         return tv
     }()
     

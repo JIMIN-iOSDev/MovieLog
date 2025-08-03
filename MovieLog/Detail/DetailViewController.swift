@@ -10,6 +10,7 @@ import UIKit
 class DetailViewController: UIViewController {
 
     private let mainView = Detail()
+    var movieTitle: String?
     
     override func loadView() {
         self.view = mainView
@@ -17,16 +18,20 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "제목"
+        setupNavigationBar()
+        setupHeader()
+        
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.title = movieTitle
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
         let likeButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
         navigationItem.rightBarButtonItem = likeButton
         navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
-        
-        setupHeader()
-        mainView.tableView.delegate = self
-        mainView.tableView.dataSource = self
     }
     
     @objc func likeButtonTapped() {
@@ -52,9 +57,5 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
             return UIView()
         }
         return detailTableViewHeader
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 250
     }
 }

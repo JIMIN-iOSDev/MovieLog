@@ -18,6 +18,9 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNav()
+        
+        mainView.movieList.delegate = self
+        mainView.movieList.dataSource = self
     }
     
     private func configureNav() {
@@ -33,5 +36,16 @@ class MainViewController: UIViewController {
         navigationController?.pushViewController(EmptyViewController(), animated: true)
         navigationItem.backButtonTitle = ""
         navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
+    }
+}
+
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.identifier, for: indexPath) as! TodayMovieCollectionViewCell
+        return cell
     }
 }

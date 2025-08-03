@@ -60,12 +60,21 @@ class Main: BaseView {
         return label
     }()
     
-    private let movieList = {
-        let layout = UICollectionViewFlowLayout()
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .orange
+    let movieList = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout())
+        cv.backgroundColor = .clear
+        cv.register(TodayMovieCollectionViewCell.self, forCellWithReuseIdentifier: TodayMovieCollectionViewCell.identifier)
         return cv
     }()
+    
+    static func layout() -> UICollectionViewFlowLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 15
+        layout.itemSize = CGSize(width: 210, height: 370)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 4, right: 10)
+        return layout
+    }
     
     override func configureHierarchy() {
         addSubview(infoBox)
@@ -113,7 +122,7 @@ class Main: BaseView {
         movieList.snp.makeConstraints { make in
             make.top.equalTo(todayMovie.snp.bottom)
             make.horizontalEdges.equalToSuperview()
-            make.bottom.equalTo(safeAreaLayoutGuide)
+            make.bottom.equalTo(safeAreaLayoutGuide).offset(-8)
         }
     }
 }

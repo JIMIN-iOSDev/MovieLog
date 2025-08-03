@@ -69,4 +69,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.configureData(row: list[indexPath.row])
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = DetailViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        navigationItem.backButtonTitle = ""
+        vc.movieTitle = list[indexPath.row].title
+        vc.overview = list[indexPath.row].overview
+    }
 }

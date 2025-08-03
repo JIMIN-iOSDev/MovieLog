@@ -74,6 +74,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(vc, animated: true)
         navigationItem.backButtonTitle = ""
         vc.movieTitle = list[indexPath.row].title
+        vc.overview = list[indexPath.row].overview
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

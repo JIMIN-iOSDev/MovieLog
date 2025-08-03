@@ -11,6 +11,7 @@ class DetailViewController: UIViewController {
 
     private let mainView = Detail()
     var movieTitle: String?
+    var overview: String?
     
     override func loadView() {
         self.view = mainView
@@ -61,6 +62,11 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: SynopsisTableViewCell.identifier, for: indexPath) as! SynopsisTableViewCell
+            if overview == "" {
+                cell.synopsis.text = "줄거리가 없습니다"
+            } else {
+                cell.synopsis.text = overview
+            }
             return cell
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: CastTitleTableViewCell.identifier, for: indexPath) as! CastTitleTableViewCell

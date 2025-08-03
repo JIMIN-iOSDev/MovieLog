@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import SnapKit
 
-class CastTitleTableViewCell: UITableViewCell {
+class CastTitleTableViewCell: BaseTableViewCell {
     
     static let identifier = "CastTitleTableViewCell"
 
@@ -17,30 +18,18 @@ class CastTitleTableViewCell: UITableViewCell {
         return label
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureHierarchy()
-        configureLayout()
-        configureView()
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(title)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         title.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(10)
         }
     }
     
-    private func configureView() {
-        backgroundColor = .clear
+    override func configureView() {
+        super.configureView()
     }
 }

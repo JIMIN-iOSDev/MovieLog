@@ -45,6 +45,7 @@ class DetailViewController: UIViewController {
     
     private func setupTableViewCell() {
         mainView.tableView.register(SynopsisTitleTableViewCell.self, forCellReuseIdentifier: SynopsisTitleTableViewCell.identifier)
+        mainView.tableView.register(SynopsisTableViewCell.self, forCellReuseIdentifier: SynopsisTableViewCell.identifier)
         mainView.tableView.register(CastTitleTableViewCell.self, forCellReuseIdentifier: CastTitleTableViewCell.identifier)
     }
 }
@@ -58,6 +59,9 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: SynopsisTitleTableViewCell.identifier, for: indexPath) as! SynopsisTitleTableViewCell
             return cell
+        } else if indexPath.row == 2 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: SynopsisTableViewCell.identifier, for: indexPath) as! SynopsisTableViewCell
+            return cell
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: CastTitleTableViewCell.identifier, for: indexPath) as! CastTitleTableViewCell
             return cell
@@ -68,6 +72,8 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 3 {
             return 44
+        } else if indexPath.row == 2 {
+            return 70
         } else {
             return 100
         }

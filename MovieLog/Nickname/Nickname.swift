@@ -10,7 +10,7 @@ import SnapKit
 
 class Nickname: BaseView {
 
-    private let textField = {
+    let textField = {
         let tf = UITextField()
         tf.placeholder = "닉네임을 입력하세요"
         tf.textColor = .white
@@ -51,7 +51,7 @@ class Nickname: BaseView {
     override func configureLayout() {
         textField.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide).offset(20)
-            make.leading.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(20)
             make.height.equalTo(44)
         }
         
@@ -64,7 +64,7 @@ class Nickname: BaseView {
         
         line.snp.makeConstraints { make in
             make.top.equalTo(editButton.snp.bottom)
-            make.leading.equalTo(textField.snp.leading)
+            make.leading.equalToSuperview().offset(13)
             make.trailing.equalTo(editButton.snp.trailing).offset(-60)
             make.height.equalTo(1)
         }

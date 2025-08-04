@@ -19,6 +19,8 @@ class NicknameDetailViewController: UIViewController {
         super.viewDidLoad()
         title = "닉네임 설정"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        mainView.textField.text = UserDefaults.standard.string(forKey: "NickName")
         mainView.textField.becomeFirstResponder()
         mainView.textField.delegate = self
         mainView.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -56,6 +58,7 @@ class NicknameDetailViewController: UIViewController {
 extension NicknameDetailViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        UserDefaults.standard.set(textField.text, forKey: "NickName")
         return true
     }
 }

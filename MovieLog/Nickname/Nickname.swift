@@ -77,5 +77,4 @@ class Nickname: BaseView {
             make.height.equalTo(44)
         }
     }
-
 }

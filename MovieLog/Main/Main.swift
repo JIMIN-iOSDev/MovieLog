@@ -47,7 +47,7 @@ class Main: BaseView {
         return label
     }()
     
-    private let deleteAll = {
+    let deleteAll = {
         let button = UIButton()
         button.setTitle("전체 삭제", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 15)
@@ -60,6 +60,7 @@ class Main: BaseView {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: recentLayout())
         cv.backgroundColor = .clear
         cv.register(RecentSearchCollectionViewCell.self, forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
+        cv.register(EmptyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyCollectionViewCell.identifier)
         return cv
     }()
     
@@ -67,7 +68,6 @@ class Main: BaseView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 10
-        layout.itemSize = CGSize(width: 85, height: 35)
         layout.sectionInset = UIEdgeInsets(top: 4, left: 10, bottom: 10, right: 10)
         return layout
     }
@@ -89,7 +89,6 @@ class Main: BaseView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 20
-        layout.itemSize = CGSize(width: 210, height: 370)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 4, right: 10)
         return layout
     }

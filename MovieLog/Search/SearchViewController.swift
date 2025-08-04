@@ -15,6 +15,7 @@ class SearchViewController: UIViewController {
     var page = 1
     var isEnd = false
     var text: String?
+    var searchClick: (() -> Void)?
     
     override func loadView() {
         self.view = mainView
@@ -91,6 +92,8 @@ extension SearchViewController: UISearchBarDelegate {
         page = 1
         self.text = mainView.searchBar.text
         callRequest(query: text!)
+        RecentSearch.saveRecentSearch(keyword: text!)
+        searchClick?()
         mainView.searchBar.text = ""
         view.endEditing(true)
     }

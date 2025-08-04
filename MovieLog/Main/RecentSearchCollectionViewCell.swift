@@ -12,6 +12,8 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "RecentSearchCollectionViewCell"
     
+    var deleteAction: (() -> Void)?
+    
     private let background = {
         let view = UIView()
         view.backgroundColor = .white
@@ -20,11 +22,10 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private let title = {
+    let title = {
         let label = UILabel()
-        label.text = "제목이다"
         label.textColor = .black
-        label.font = .systemFont(ofSize: 13)
+        label.font = .systemFont(ofSize: 15)
         label.textAlignment = .center
         return label
     }()
@@ -40,6 +41,12 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         configureHierarchy()
         configureLayout()
+        
+        delete.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
+    }
+    
+    @objc private func deleteTapped() {
+        deleteAction?()
     }
     
     @available(*, unavailable)
@@ -59,7 +66,7 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
         }
         title.snp.makeConstraints { make in
             make.centerY.equalTo(background.snp.centerY)
-            make.leading.equalToSuperview().offset(8)
+            make.leading.equalToSuperview().offset(16)
         }
         delete.snp.makeConstraints { make in
             make.centerY.equalTo(background.snp.centerY)

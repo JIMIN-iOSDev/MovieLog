@@ -26,6 +26,13 @@ class MainViewController: UIViewController {
         mainView.searchList.dataSource = self
         mainView.movieList.delegate = self
         mainView.movieList.dataSource = self
+        
+        mainView.deleteAll.addTarget(self, action: #selector(deleteAllTapped), for: .touchUpInside)
+    }
+    
+    @objc func deleteAllTapped() {
+        RecentSearch.clearRecentSearch()
+        mainView.searchList.reloadData()
     }
     
     private func configureNav() {
@@ -38,7 +45,11 @@ class MainViewController: UIViewController {
     }
     
     @objc func searchButtonTapped() {
-        navigationController?.pushViewController(EmptyViewController(), animated: true)
+        let vc = EmptyViewController()
+        vc.searchClick = {
+            self.mainView.searchList.reloadData()
+        }
+        navigationController?.pushViewController(vc, animated: true)
         navigationItem.backButtonTitle = ""
         navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
     }
@@ -61,10 +72,11 @@ class MainViewController: UIViewController {
     }
 }
 
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == mainView.searchList {
-            return 10
+            let count = RecentSearch.getRecentSearch().count
+            return count == 0 ? 1 : count
         } else {
             return list.count
         }
@@ -72,8 +84,21 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == mainView.searchList {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as! RecentSearchCollectionViewCell
-            return cell
+            let recent = RecentSearch.getRecentSearch()
+            if recent.isEmpty {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyCollectionViewCell.identifier, for: indexPath) as! EmptyCollectionViewCell
+                mainView.deleteAll.isHidden = true
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as! RecentSearchCollectionViewCell
+                cell.title.text = RecentSearch.getRecentSearch()[indexPath.row]
+                cell.deleteAction = {
+                    RecentSearch.deleteKeyword(index: indexPath.row)
+                    collectionView.reloadData()
+                }
+                mainView.deleteAll.isHidden = false
+                return cell
+            }
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.identifier, for: indexPath) as! TodayMovieCollectionViewCell
             cell.configureData(row: list[indexPath.row])
@@ -81,11 +106,31 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == mainView.searchList {
+            if RecentSearch.getRecentSearch().isEmpty {
+                return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
+            } else {
+                return CGSize(width: 85, height: 35)
+            }
+        } else {
+            return CGSize(width: 210, height: 370)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = DetailViewController()
-        navigationController?.pushViewController(vc, animated: true)
-        navigationItem.backButtonTitle = ""
-        vc.movieTitle = list[indexPath.row].title
-        vc.overview = list[indexPath.row].overview
+        if collectionView == mainView.searchList {
+            guard !RecentSearch.getRecentSearch().isEmpty else { return }
+            let vc = SearchViewController()
+            navigationController?.pushViewController(vc, animated: true)
+            navigationItem.backButtonTitle = ""
+            vc.text = RecentSearch.getRecentSearch()[indexPath.row]
+        } else {
+            let vc = DetailViewController()
+            navigationController?.pushViewController(vc, animated: true)
+            navigationItem.backButtonTitle = ""
+            vc.movieTitle = list[indexPath.row].title
+            vc.overview = list[indexPath.row].overview
+        }
     }
 }

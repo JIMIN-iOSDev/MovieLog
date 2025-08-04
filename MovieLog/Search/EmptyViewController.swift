@@ -10,6 +10,7 @@ import UIKit
 class EmptyViewController: UIViewController {
 
     private let mainView = Empty()
+    var searchClick: (() -> Void)?
     
     override func loadView() {
         self.view = mainView
@@ -30,6 +31,9 @@ extension EmptyViewController: UISearchBarDelegate {
         navigationController?.pushViewController(vc, animated: true)
         navigationItem.backButtonTitle = ""
         vc.text = searchBar.text
+        RecentSearch.saveRecentSearch(keyword: searchBar.text!)
+        searchClick?()
+        vc.searchClick = searchClick
         searchBar.text = ""
     }
 }

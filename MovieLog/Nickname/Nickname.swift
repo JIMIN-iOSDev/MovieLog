@@ -35,7 +35,7 @@ class Nickname: BaseView {
         return button
     }()
     
-    private let endButton = {
+    let endButton = {
         let button = Button()
         button.setTitle("완료", for: .normal)
         return button

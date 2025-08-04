@@ -10,6 +10,7 @@
 		EC35BD7B2E3B504E00DD1CB7 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = EC35BD7A2E3B504E00DD1CB7 /* .gitignore */; };
 		EC35BD8C2E3B51B100DD1CB7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EC35BD8B2E3B51B100DD1CB7 /* SnapKit */; };
 		EC35BD8F2E3B51C000DD1CB7 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EC35BD8E2E3B51C000DD1CB7 /* Alamofire */; };
+		EC3AE7902E413457004F5ED7 /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = EC3AE78F2E413457004F5ED7 /* Toast */; };
 		EC69C01B2E3D0922009A8F90 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EC69C01A2E3D0922009A8F90 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC3AE7902E413457004F5ED7 /* Toast in Frameworks */,
 				EC69C01B2E3D0922009A8F90 /* Kingfisher in Frameworks */,
 				EC35BD8C2E3B51B100DD1CB7 /* SnapKit in Frameworks */,
 				EC35BD8F2E3B51C000DD1CB7 /* Alamofire in Frameworks */,
@@ -93,6 +95,7 @@
 				EC35BD8B2E3B51B100DD1CB7 /* SnapKit */,
 				EC35BD8E2E3B51C000DD1CB7 /* Alamofire */,
 				EC69C01A2E3D0922009A8F90 /* Kingfisher */,
+				EC3AE78F2E413457004F5ED7 /* Toast */,
 			);
 			productName = MovieLog;
 			productReference = EC35BD622E3B500700DD1CB7 /* MovieLog.app */;
@@ -126,6 +129,7 @@
 				EC35BD8A2E3B51B100DD1CB7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				EC35BD8D2E3B51C000DD1CB7 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				EC69C0192E3D0922009A8F90 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				EC3AE78E2E413457004F5ED7 /* XCRemoteSwiftPackageReference "Toast-Swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EC35BD632E3B500700DD1CB7 /* Products */;
@@ -380,6 +384,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		EC3AE78E2E413457004F5ED7 /* XCRemoteSwiftPackageReference "Toast-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scalessec/Toast-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 		EC69C0192E3D0922009A8F90 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -400,6 +412,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC35BD8D2E3B51C000DD1CB7 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		EC3AE78F2E413457004F5ED7 /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC3AE78E2E413457004F5ED7 /* XCRemoteSwiftPackageReference "Toast-Swift" */;
+			productName = Toast;
 		};
 		EC69C01A2E3D0922009A8F90 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

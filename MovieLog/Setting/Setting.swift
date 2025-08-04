@@ -19,7 +19,7 @@ class Setting: BaseView {
     
     private let nickName = {
         let label = Label(size: 18, weight: .bold, alignment: .left)
-        label.text = "달콤한 기모청바지"
+        label.text = UserDefaults.standard.string(forKey: "NickName")
         return label
     }()
     

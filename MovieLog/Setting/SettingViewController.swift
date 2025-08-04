@@ -27,6 +27,7 @@ class SettingViewController: UIViewController {
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "확인", style: .default) { _ in
             UserDefaults.standard.removeObject(forKey: "NickName")
+            RecentSearch.clearRecentSearch()
             
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
                 let nav = UINavigationController(rootViewController: OnboardingViewController())

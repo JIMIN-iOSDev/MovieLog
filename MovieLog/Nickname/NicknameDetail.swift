@@ -26,26 +26,30 @@ class NicknameDetail: BaseView {
     let status = {
         let label = UILabel()
         label.textColor = UIColor(hex: "98FB98")
-        label.font = .systemFont(ofSize: 10)
+        label.font = .systemFont(ofSize: 14)
         return label
     }()
     
     override func configureHierarchy() {
         addSubview(textField)
         addSubview(line)
+        addSubview(status)
     }
     
     override func configureLayout() {
         textField.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide).offset(20)
-            make.horizontalEdges.equalToSuperview().inset(15)
+            make.horizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(44)
         }
-        
         line.snp.makeConstraints { make in
             make.top.equalTo(textField.snp.bottom)
-            make.horizontalEdges.equalTo(textField.snp.horizontalEdges)
+            make.horizontalEdges.equalToSuperview().inset(13)
             make.height.equalTo(1)
+        }
+        status.snp.makeConstraints { make in
+            make.top.equalTo(line.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(20)
         }
     }
 }

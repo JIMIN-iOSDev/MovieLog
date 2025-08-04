@@ -11,6 +11,7 @@ import Toast
 class NicknameViewController: UIViewController {
 
     private let mainView = Nickname()
+    private let dateFormatter = DateFormatter()
     
     override func loadView() {
         self.view = mainView
@@ -56,6 +57,10 @@ class NicknameViewController: UIViewController {
                 window.makeKeyAndVisible()
             }
         }
+    
+        dateFormatter.dateFormat = "yy-MM-dd"
+        let dateString = dateFormatter.string(from: Date())
+        UserDefaults.standard.set(dateString, forKey: "Date")
     }
     
     private func validateNickname(text: String?) -> String? {

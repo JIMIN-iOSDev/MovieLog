@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class Main: BaseView {
-
+    
     private let infoBox = {
         let view = UIView()
         view.backgroundColor = UIColor(hex: "#292929")
@@ -26,7 +26,7 @@ class Main: BaseView {
     
     private let date = {
         let label = Label(size: 13, weight: .regular, alignment: .right)
-        label.text = "88.88.88 가입 >"
+        label.text = "\(UserDefaults.standard.string(forKey: "Date") ?? "") 가입 >"
         return label
     }()
     

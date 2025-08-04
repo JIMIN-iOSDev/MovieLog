@@ -25,7 +25,7 @@ class Setting: BaseView {
     
     private let date = {
         let label = Label(size: 13, weight: .regular, alignment: .right)
-        label.text = "88.88.88 가입 >"
+        label.text = "\(UserDefaults.standard.string(forKey: "Date") ?? "") 가입 >"
         return label
     }()
     

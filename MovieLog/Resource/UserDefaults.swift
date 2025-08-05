@@ -37,4 +37,24 @@ class RecentSearch {
         UserDefaults.standard.set(list, forKey: "recentSearches")
     }
     
+    static func getLikeMovies() -> Set<Int> {
+        let list = UserDefaults.standard.array(forKey: "LikeMovie") as? [Int] ?? []
+        return Set(list)
+    }
+    
+    static func addLikeMovie(id: Int) {
+        var list = getLikeMovies()
+        list.insert(id)
+        UserDefaults.standard.set(Array(list), forKey: "LikeMovie")
+    }
+    
+    static func removeLikeMovie(id: Int) {
+        var list = getLikeMovies()
+        list.remove(id)
+        UserDefaults.standard.set(Array(list), forKey: "LikeMovie")
+    }
+    
+    static func isLike(id: Int) -> Bool {
+        return getLikeMovies().contains(id)
+    }
 }

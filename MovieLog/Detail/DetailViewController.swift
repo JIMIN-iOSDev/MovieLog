@@ -12,6 +12,9 @@ class DetailViewController: UIViewController {
     private let mainView = Detail()
     var movieTitle: String?
     var overview: String?
+    var movieId: Int?
+    private var likeButton: UIBarButtonItem!
+    var likeChange: (() -> Void)?
     
     override func loadView() {
         self.view = mainView
@@ -31,13 +34,22 @@ class DetailViewController: UIViewController {
         navigationItem.title = movieTitle
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
-        let likeButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
+        likeButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
         navigationItem.rightBarButtonItem = likeButton
         navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
+        let image = RecentSearch.isLike(id: movieId!) ? "heart.fill" : "heart"
+        likeButton.image = UIImage(systemName: image)
     }
     
     @objc func likeButtonTapped() {
-        print("좋아요 가 눌림")
+        if RecentSearch.isLike(id: movieId!) {
+            RecentSearch.removeLikeMovie(id: movieId!)
+        } else {
+            RecentSearch.addLikeMovie(id: movieId!)
+        }
+        let image = RecentSearch.isLike(id: movieId!) ? "heart.fill" : "heart"
+        likeButton.image = UIImage(systemName: image)
+        likeChange?()
     }
     
     private func setupHeader() {

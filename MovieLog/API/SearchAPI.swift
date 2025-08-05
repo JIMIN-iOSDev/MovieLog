@@ -19,4 +19,5 @@ struct Result: Decodable {
     let genre_ids: [Int]
     let release_date: String
     let overview: String
+    let id: Int
 }

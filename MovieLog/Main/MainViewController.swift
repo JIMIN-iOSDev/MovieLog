@@ -30,6 +30,13 @@ class MainViewController: UIViewController {
         mainView.deleteAll.addTarget(self, action: #selector(deleteAllTapped), for: .touchUpInside)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        mainView.searchList.reloadData()
+        mainView.movieList.reloadData()
+        mainView.likeCount.setTitle("\(RecentSearch.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
+    }
+    
     @objc func deleteAllTapped() {
         RecentSearch.clearRecentSearch()
         mainView.searchList.reloadData()
@@ -70,6 +77,17 @@ class MainViewController: UIViewController {
             }
         }
     }
+    
+    @objc private func likeButtonTapped(_ sender: UIButton) {
+        if RecentSearch.isLike(id: list[sender.tag].id) {
+            RecentSearch.removeLikeMovie(id: list[sender.tag].id)
+            sender.setImage(UIImage(systemName: "heart"), for: .normal)
+        } else {
+            RecentSearch.addLikeMovie(id: list[sender.tag].id)
+            sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        }
+        mainView.likeCount.setTitle("\(RecentSearch.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
+    }
 }
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -102,6 +120,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayMovieCollectionViewCell.identifier, for: indexPath) as! TodayMovieCollectionViewCell
             cell.configureData(row: list[indexPath.row])
+            cell.likeButton.tag = indexPath.row
+            cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
             return cell
         }
     }
@@ -122,15 +142,22 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         if collectionView == mainView.searchList {
             guard !RecentSearch.getRecentSearch().isEmpty else { return }
             let vc = SearchViewController()
+            vc.text = RecentSearch.getRecentSearch()[indexPath.row]
+            vc.likeChange = {
+                collectionView.reloadData()
+            }
             navigationController?.pushViewController(vc, animated: true)
             navigationItem.backButtonTitle = ""
-            vc.text = RecentSearch.getRecentSearch()[indexPath.row]
         } else {
             let vc = DetailViewController()
-            navigationController?.pushViewController(vc, animated: true)
-            navigationItem.backButtonTitle = ""
             vc.movieTitle = list[indexPath.row].title
             vc.overview = list[indexPath.row].overview
+            vc.movieId = list[indexPath.row].id
+            vc.likeChange = {
+                collectionView.reloadData()
+            }
+            navigationController?.pushViewController(vc, animated: true)
+            navigationItem.backButtonTitle = ""
         }
     }
 }

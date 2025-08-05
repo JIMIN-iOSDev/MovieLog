@@ -29,9 +29,8 @@ class Setting: BaseView {
         return label
     }()
     
-    private let likeCount = {
+    let likeCount = {
         let button = UIButton()
-        button.setTitle("1000개의 무비박스 보관중", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor(hex: "#4A6246")
         button.layer.cornerRadius = 10

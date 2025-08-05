@@ -32,7 +32,7 @@ class SearchTableViewCell: BaseTableViewCell {
         return label
     }()
     
-    private let likeButton = {
+    let likeButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = UIColor(hex: "98FB98")
@@ -78,6 +78,10 @@ class SearchTableViewCell: BaseTableViewCell {
         poster.kf.setImage(with: url)
         title.text = row.title
         date.text = row.release_date
+        
+        let isLike = RecentSearch.getLikeMovies().contains(row.id)
+        let image = isLike ? "heart.fill" : "heart"
+        likeButton.setImage(UIImage(systemName: image), for: .normal)
     }
 }
 

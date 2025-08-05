@@ -16,6 +16,7 @@ class SearchViewController: UIViewController {
     var isEnd = false
     var text: String?
     var searchClick: (() -> Void)?
+    var likeChange: (() -> Void)?
     
     override func loadView() {
         self.view = mainView
@@ -56,6 +57,16 @@ class SearchViewController: UIViewController {
             }
         }
     }
+    
+    @objc func likeButtonTapped(_ sender: UIButton) {
+        if RecentSearch.isLike(id: list[sender.tag].id) {
+            RecentSearch.removeLikeMovie(id: list[sender.tag].id)
+            sender.setImage(UIImage(systemName: "heart"), for: .normal)
+        } else {
+            RecentSearch.addLikeMovie(id: list[sender.tag].id)
+            sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        }
+    }
 }
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
@@ -67,15 +78,22 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier, for: indexPath) as! SearchTableViewCell
         cell.configureData(row: list[indexPath.row])
         cell.selectionStyle = .none
+        cell.likeButton.tag = indexPath.row
+        cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = DetailViewController()
-        navigationController?.pushViewController(vc, animated: true)
-        navigationItem.backButtonTitle = ""
         vc.movieTitle = list[indexPath.row].title
         vc.overview = list[indexPath.row].overview
+        vc.movieId = list[indexPath.row].id
+        vc.likeChange = {
+            tableView.reloadData()
+            self.likeChange?()
+        }
+        navigationController?.pushViewController(vc, animated: true)
+        navigationItem.backButtonTitle = ""
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

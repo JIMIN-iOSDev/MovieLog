@@ -32,4 +32,8 @@ class SynopsisTableViewCell: BaseTableViewCell {
     override func configureView() {
         super.configureView()
     }
+    
+    func updateLine(expand: Bool) {
+        synopsis.numberOfLines = expand ? 0 : 3
+    }
 }

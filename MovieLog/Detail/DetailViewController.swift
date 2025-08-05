@@ -15,6 +15,7 @@ class DetailViewController: UIViewController {
     var movieId: Int?
     private var likeButton: UIBarButtonItem!
     var likeChange: (() -> Void)?
+    private var synopsisExpand = false
     
     override func loadView() {
         self.view = mainView
@@ -71,6 +72,11 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: SynopsisTitleTableViewCell.identifier, for: indexPath) as! SynopsisTitleTableViewCell
+            cell.moreButtonTapped = {
+                self.synopsisExpand.toggle()
+                tableView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .automatic)
+            }
+            cell.updateButtonTitle(expand: synopsisExpand)
             return cell
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: SynopsisTableViewCell.identifier, for: indexPath) as! SynopsisTableViewCell
@@ -79,6 +85,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 cell.synopsis.text = overview
             }
+            cell.updateLine(expand: synopsisExpand)
             return cell
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: CastTitleTableViewCell.identifier, for: indexPath) as! CastTitleTableViewCell
@@ -91,7 +98,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 3 {
             return 44
         } else if indexPath.row == 2 {
-            return 70
+            return synopsisExpand ? UITableView.automaticDimension : 70
         } else {
             return 100
         }

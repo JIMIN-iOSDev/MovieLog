@@ -12,6 +12,8 @@ class SynopsisTitleTableViewCell: BaseTableViewCell {
 
     static let identifier = "SynopsisTitleTableViewCell"
     
+    var moreButtonTapped: (() -> Void)?
+    
     private let title = {
         let label = Label(size: 17, weight: .bold, alignment: .left)
         label.text = "Synopsis"
@@ -45,5 +47,14 @@ class SynopsisTitleTableViewCell: BaseTableViewCell {
     
     override func configureView() {
         super.configureView()
+        moreButton.addTarget(self, action: #selector(moreButtonAction), for: .touchUpInside)
+    }
+    
+    @objc private func moreButtonAction() {
+        moreButtonTapped?()
+    }
+    
+    func updateButtonTitle(expand: Bool) {
+        moreButton.setTitle(expand ? "Hide" : "More", for: .normal)
     }
 }

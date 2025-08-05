@@ -12,9 +12,12 @@ class DetailTableViewHeader: UITableViewHeaderFooterView {
 
     static let identifier = "DetailTableViewHeader"
     
+    private var backdrops: [Backdrops] = []
+    
     private let backdrop = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout())
-        cv.backgroundColor = .red
+        cv.isPagingEnabled = true
+        cv.backgroundColor = .clear
         return cv
     }()
     
@@ -32,6 +35,10 @@ class DetailTableViewHeader: UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         configureHierarchy()
         configureLayout()
+        
+        backdrop.delegate = self
+        backdrop.dataSource = self
+        backdrop.register(BackdropCollectionViewCell.self, forCellWithReuseIdentifier: BackdropCollectionViewCell.identifier)
     }
     
     @available(*, unavailable)
@@ -47,5 +54,23 @@ class DetailTableViewHeader: UITableViewHeaderFooterView {
         backdrop.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+    
+    func configure(backdrops: [Backdrops]) {
+        self.backdrops = Array(backdrops.prefix(5))
+        backdrop.reloadData()
+    }
+}
+
+extension DetailTableViewHeader: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return backdrops.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BackdropCollectionViewCell.identifier, for: indexPath) as! BackdropCollectionViewCell
+        let url = URL(string: "https://image.tmdb.org/t/p/w780\(backdrops[indexPath.item].file_path)")!
+        cell.configure(url: url)
+        return cell
     }
 }

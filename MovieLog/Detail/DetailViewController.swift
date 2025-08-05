@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class DetailViewController: UIViewController {
 
@@ -16,6 +17,7 @@ class DetailViewController: UIViewController {
     private var likeButton: UIBarButtonItem!
     var likeChange: (() -> Void)?
     private var synopsisExpand = false
+    private var backdrops: [Backdrops] = []
     
     override func loadView() {
         self.view = mainView
@@ -26,6 +28,7 @@ class DetailViewController: UIViewController {
         setupNavigationBar()
         setupHeader()
         setupTableViewCell()
+        callRequest(id: movieId!)
         
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
@@ -61,6 +64,25 @@ class DetailViewController: UIViewController {
         mainView.tableView.register(SynopsisTitleTableViewCell.self, forCellReuseIdentifier: SynopsisTitleTableViewCell.identifier)
         mainView.tableView.register(SynopsisTableViewCell.self, forCellReuseIdentifier: SynopsisTableViewCell.identifier)
         mainView.tableView.register(CastTitleTableViewCell.self, forCellReuseIdentifier: CastTitleTableViewCell.identifier)
+    }
+    
+    private func callRequest(id: Int) {
+        let url = "https://api.themoviedb.org/3/movie/\(id)/images"
+        let header: HTTPHeaders = [
+            "Authorization": "Bearer \(APIKey.TMDBToken)"
+        ]
+        AF.request(url, headers: header)
+            .responseDecodable(of: Image.self) { response in
+                switch response.result {
+                case .success(let value):
+                    self.backdrops = value.backdrops
+                    DispatchQueue.main.async {
+                        self.mainView.tableView.reloadData()
+                    }
+                case .failure(let error):
+                    print("fail: \(error)")
+            }
+        }
     }
 }
 
@@ -105,9 +127,8 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let detailTableViewHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: DetailTableViewHeader.identifier) as? DetailTableViewHeader else {
-            return UIView()
-        }
-        return detailTableViewHeader
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: DetailTableViewHeader.identifier) as! DetailTableViewHeader
+        header.configure(backdrops: backdrops)
+        return header
     }
 }

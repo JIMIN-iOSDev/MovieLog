@@ -151,8 +151,7 @@ final class MainViewController: UIViewController {
     private func bind() {
         
         UserDefaultsHelper.likeMovies
-            .map { $0.count }
-            .map { "\($0)개의 무비박스 보관중 " }
+            .map { "\($0.count)개의 무비박스 보관 중" }
             .bind(to: likeCount.rx.title())
             .disposed(by: disposeBag)
         
@@ -173,7 +172,11 @@ final class MainViewController: UIViewController {
             }
         })
                 
-        searchList
+        UserDefaultsHelper.recentSearches
+            .map({
+                let items: [RecentSearchItem] = $0.isEmpty ? [.empty] : $0.map { .keyword($0) }
+                return [RecentSection(items: items)]
+            })
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RecentSearch {
+class UserDefaultsHelper {
     
     private init() {}
     

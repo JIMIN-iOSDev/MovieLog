@@ -99,7 +99,7 @@ class TodayMovieCollectionViewCell: UICollectionViewCell {
             explain.text = row.overview
         }
         
-        let isLike = RecentSearch.getLikeMovies().contains(row.id)
+        let isLike = UserDefaultsHelper.getLikeMovies().contains(row.id)
         let image = isLike ? "heart.fill" : "heart"
         likeButton.setImage(UIImage(systemName: image), for: .normal)
     }

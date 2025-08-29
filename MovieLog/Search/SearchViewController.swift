@@ -59,11 +59,11 @@ class SearchViewController: UIViewController {
     }
     
     @objc func likeButtonTapped(_ sender: UIButton) {
-        if RecentSearch.isLike(id: list[sender.tag].id) {
-            RecentSearch.removeLikeMovie(id: list[sender.tag].id)
+        if UserDefaultsHelper.isLike(id: list[sender.tag].id) {
+            UserDefaultsHelper.removeLikeMovie(id: list[sender.tag].id)
             sender.setImage(UIImage(systemName: "heart"), for: .normal)
         } else {
-            RecentSearch.addLikeMovie(id: list[sender.tag].id)
+            UserDefaultsHelper.addLikeMovie(id: list[sender.tag].id)
             sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         }
     }
@@ -110,7 +110,7 @@ extension SearchViewController: UISearchBarDelegate {
         page = 1
         self.text = mainView.searchBar.text
         callRequest(query: text!)
-        RecentSearch.saveRecentSearch(keyword: text!)
+        UserDefaultsHelper.saveRecentSearch(keyword: text!)
         searchClick?()
         mainView.searchBar.text = ""
         view.endEditing(true)

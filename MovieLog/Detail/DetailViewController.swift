@@ -41,17 +41,17 @@ class DetailViewController: UIViewController {
         likeButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
         navigationItem.rightBarButtonItem = likeButton
         navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
-        let image = RecentSearch.isLike(id: movieId!) ? "heart.fill" : "heart"
+        let image = UserDefaultsHelper.isLike(id: movieId!) ? "heart.fill" : "heart"
         likeButton.image = UIImage(systemName: image)
     }
     
     @objc func likeButtonTapped() {
-        if RecentSearch.isLike(id: movieId!) {
-            RecentSearch.removeLikeMovie(id: movieId!)
+        if UserDefaultsHelper.isLike(id: movieId!) {
+            UserDefaultsHelper.removeLikeMovie(id: movieId!)
         } else {
-            RecentSearch.addLikeMovie(id: movieId!)
+            UserDefaultsHelper.addLikeMovie(id: movieId!)
         }
-        let image = RecentSearch.isLike(id: movieId!) ? "heart.fill" : "heart"
+        let image = UserDefaultsHelper.isLike(id: movieId!) ? "heart.fill" : "heart"
         likeButton.image = UIImage(systemName: image)
         likeChange?()
     }

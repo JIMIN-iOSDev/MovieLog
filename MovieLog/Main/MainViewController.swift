@@ -82,7 +82,6 @@ final class MainViewController: UIViewController {
         cv.register(RecentSearchCollectionViewCell.self, forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
         return cv
     }()
-    
     private func recentLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -104,7 +103,6 @@ final class MainViewController: UIViewController {
         cv.register(TodayMovieCollectionViewCell.self, forCellWithReuseIdentifier: TodayMovieCollectionViewCell.identifier)
         return cv
     }()
-    
     private func layout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -132,7 +130,7 @@ final class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         collectionView.reloadData()
         movieCollectionView.reloadData()
-        likeCount.setTitle("\(RecentSearch.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
+        likeCount.setTitle("\(UserDefaultsHelper.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
     }
     
     private func callRequest() {
@@ -161,9 +159,9 @@ final class MainViewController: UIViewController {
                 
             case .keyword:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as! RecentSearchCollectionViewCell
-                cell.title.text = RecentSearch.getRecentSearch()[indexPath.row]
+                cell.title.text = UserDefaultsHelper.getRecentSearch()[indexPath.row]
                 cell.deleteAction = {
-                    RecentSearch.deleteKeyword(index: indexPath.row)
+                    UserDefaultsHelper.deleteKeyword(index: indexPath.row)
                     collectionView.reloadData()
                 }
                 return cell
@@ -189,9 +187,9 @@ final class MainViewController: UIViewController {
                 return indexPath
             }
             .bind(with: self) { owner, indexPath in                
-                guard !RecentSearch.getRecentSearch().isEmpty else { return }
+                guard !UserDefaultsHelper.getRecentSearch().isEmpty else { return }
                 let vc = SearchViewController()
-                vc.text = RecentSearch.getRecentSearch()[indexPath.row]
+                vc.text = UserDefaultsHelper.getRecentSearch()[indexPath.row]
                 vc.likeChange = {
                     owner.collectionView.reloadData()
                 }
@@ -203,7 +201,7 @@ final class MainViewController: UIViewController {
         deleteAll.rx.tap
             .asDriver()
             .drive(with: self) { owner, _ in
-                RecentSearch.clearRecentSearch()
+                UserDefaultsHelper.clearRecentSearch()
                 owner.collectionView.reloadData()
             }
             .disposed(by: disposeBag)
@@ -214,15 +212,15 @@ final class MainViewController: UIViewController {
                 cell.likeButton.rx.tap
                     .asDriver()
                     .drive(with: self) { owner, _ in
-                        if RecentSearch.isLike(id: element.id) {
-                            RecentSearch.removeLikeMovie(id: element.id)
+                        if UserDefaultsHelper.isLike(id: element.id) {
+                            UserDefaultsHelper.removeLikeMovie(id: element.id)
                             cell.likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
                         } else {
-                            RecentSearch.addLikeMovie(id: element.id)
+                            UserDefaultsHelper.addLikeMovie(id: element.id)
                             cell.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
                         }
-                        owner.likeCount.setTitle("\(RecentSearch.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
-                    }.disposed(by: cell.disposeBag)                
+                        owner.likeCount.setTitle("\(UserDefaultsHelper.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
+                    }.disposed(by: cell.disposeBag)
             }
             .disposed(by: disposeBag)
         
@@ -317,7 +315,7 @@ final class MainViewController: UIViewController {
 extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == self.collectionView {
-            if RecentSearch.getRecentSearch().isEmpty {
+            if UserDefaultsHelper.getRecentSearch().isEmpty {
                 return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
             } else {
                 return CGSize(width: 85, height: 35)

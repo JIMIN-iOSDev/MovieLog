@@ -31,7 +31,7 @@ extension EmptyViewController: UISearchBarDelegate {
         navigationController?.pushViewController(vc, animated: true)
         navigationItem.backButtonTitle = ""
         vc.text = searchBar.text
-        RecentSearch.saveRecentSearch(keyword: searchBar.text!)
+        UserDefaultsHelper.saveRecentSearch(keyword: searchBar.text!)
         searchClick?()
         vc.searchClick = searchClick
         searchBar.text = ""

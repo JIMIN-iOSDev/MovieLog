@@ -24,7 +24,7 @@ class SettingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        mainView.likeCount.setTitle("\(RecentSearch.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
+        mainView.likeCount.setTitle("\(UserDefaultsHelper.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
     }
     
     @objc func deleteButtonTapped() {
@@ -33,7 +33,7 @@ class SettingViewController: UIViewController {
         let ok = UIAlertAction(title: "확인", style: .default) { _ in
             UserDefaults.standard.removeObject(forKey: "NickName")
             UserDefaults.standard.removeObject(forKey: "LikeMovie")
-            RecentSearch.clearRecentSearch()
+            UserDefaultsHelper.clearRecentSearch()
             
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
                 let nav = UINavigationController(rootViewController: OnboardingViewController())

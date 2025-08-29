@@ -11,23 +11,23 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
+enum RecentSearchItem {
+    case empty
+    case keyword(String)
+}
+
 struct RecentSection {
     var items: [RecentSearchItem]
 }
 
-extension RecentSection: SectionModelType {
+extension RecentSection: SectionModelType { // 밑에서 header를 쓸 일이 없으면 굳이 extension으로 분리할 필요가 있나?
     init(original: RecentSection, items: [RecentSearchItem]) {
         self = original
         self.items = items
     }
 }
 
-enum RecentSearchItem {
-    case empty
-    case keyword(String)
-}
-
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
 
     private let infoBox = {
         let view = UIView()
@@ -74,25 +74,15 @@ class MainViewController: UIViewController {
         return button
     }()
     
-    private let dataSource = RxCollectionViewSectionedReloadDataSource<RecentSection>(configureCell: { dataSource, collectionView, indexPath, item in
-        switch item {
-        case .empty:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyCollectionViewCell.identifier, for: indexPath) as! EmptyCollectionViewCell
-            return cell
-            
-        case .keyword(let text):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as! RecentSearchCollectionViewCell
-            cell.title.text = RecentSearch.getRecentSearch()[indexPath.row]
-            cell.deleteAction = {
-                RecentSearch.deleteKeyword(index: indexPath.row)
-                collectionView.reloadData()
-            }
-            return cell
-        }
-    })
-    
     private let searchList = BehaviorRelay<[RecentSection]>(value: [])
-    private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: recentLayout())
+    private lazy var collectionView = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: recentLayout())
+        cv.backgroundColor = .clear
+        cv.register(EmptyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyCollectionViewCell.identifier)
+        cv.register(RecentSearchCollectionViewCell.self, forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
+        return cv
+    }()
+    
     private func recentLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -108,7 +98,13 @@ class MainViewController: UIViewController {
     }()
     
     private let movieList = BehaviorRelay<[MovieInfo]>(value: [])
-    private lazy var movieCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout())
+    private lazy var movieCollectionView = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout())
+        cv.backgroundColor = .clear
+        cv.register(TodayMovieCollectionViewCell.self, forCellWithReuseIdentifier: TodayMovieCollectionViewCell.identifier)
+        return cv
+    }()
+    
     private func layout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -126,10 +122,10 @@ class MainViewController: UIViewController {
         configureNav()
         configureHierarchy()
         configureLayout()
+        view.backgroundColor = .black
         
-        collectionView.register(EmptyCollectionViewCell.self, forCellWithReuseIdentifier: EmptyCollectionViewCell.identifier)
-        collectionView.register(RecentSearchCollectionViewCell.self, forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
-        movieCollectionView.register(TodayMovieCollectionViewCell.self, forCellWithReuseIdentifier: TodayMovieCollectionViewCell.identifier)
+        collectionView.delegate = self
+        movieCollectionView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -139,7 +135,7 @@ class MainViewController: UIViewController {
         likeCount.setTitle("\(RecentSearch.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
     }
     
-    func callRequest() {
+    private func callRequest() {
         let url = "https://api.themoviedb.org/3/trending/movie/day?language=ko-KR&page=1"
         let header: HTTPHeaders = [
             "Authorization": "Bearer \(APIKey.TMDBToken)"
@@ -156,6 +152,23 @@ class MainViewController: UIViewController {
     }
 
     private func bind() {
+        
+        let dataSource = RxCollectionViewSectionedReloadDataSource<RecentSection>(configureCell: { dataSource, collectionView, indexPath, item in
+            switch item {
+            case .empty:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyCollectionViewCell.identifier, for: indexPath) as! EmptyCollectionViewCell
+                return cell
+                
+            case .keyword:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as! RecentSearchCollectionViewCell
+                cell.title.text = RecentSearch.getRecentSearch()[indexPath.row]
+                cell.deleteAction = {
+                    RecentSearch.deleteKeyword(index: indexPath.row)
+                    collectionView.reloadData()
+                }
+                return cell
+            }
+        })
                 
         searchList
             .bind(to: collectionView.rx.items(dataSource: dataSource))
@@ -163,8 +176,8 @@ class MainViewController: UIViewController {
         
         searchList
             .map {
-                !($0.first?.items.contains {
-                    if case .keyword = $0 { return true }
+                !($0.first?.items.contains {    // 지금 섹션은 하나 뿐이니까 first만 체크
+                    if case .keyword = $0 { return true }   // switch문으로 비교하는 걸 간단하게 작성한 것
                     return false
                 } ?? false)
             }
@@ -251,9 +264,6 @@ class MainViewController: UIViewController {
             }
             .disposed(by: disposeBag)
     }
-}
-
-extension MainViewController: UICollectionViewDelegateFlowLayout {
     
     private func configureHierarchy() {
         [infoBox, nickName, date, likeCount, recentSearch, deleteAll, collectionView, todayMovie, movieCollectionView]
@@ -302,7 +312,9 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
     }
-    
+}
+
+extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == self.collectionView {
             if RecentSearch.getRecentSearch().isEmpty {

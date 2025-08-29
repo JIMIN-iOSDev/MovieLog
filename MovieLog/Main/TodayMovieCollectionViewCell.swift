@@ -7,10 +7,14 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class TodayMovieCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "TodayMovieCollectionViewCell"
+    
+    var disposeBag = DisposeBag()
     
     private let poster = {
         let image = UIImageView()
@@ -39,6 +43,11 @@ class TodayMovieCollectionViewCell: UICollectionViewCell {
         button.backgroundColor = .clear
         return button
     }()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

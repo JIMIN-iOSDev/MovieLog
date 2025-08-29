@@ -79,7 +79,7 @@ class SearchTableViewCell: BaseTableViewCell {
         title.text = row.title
         date.text = row.release_date
         
-        let isLike = UserDefaultsHelper.getLikeMovies().contains(row.id)
+        let isLike = UserDefaultsHelper.likeMovies.value.contains(row.id)
         let image = isLike ? "heart.fill" : "heart"
         likeButton.setImage(UIImage(systemName: image), for: .normal)
     }

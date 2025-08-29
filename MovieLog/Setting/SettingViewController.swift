@@ -22,11 +22,6 @@ class SettingViewController: UIViewController {
         mainView.delete.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        mainView.likeCount.setTitle("\(UserDefaultsHelper.getLikeMovies().count)개의 무비박스 보관중", for: .normal)
-    }
-    
     @objc func deleteButtonTapped() {
         let alert = UIAlertController(title: "탈퇴하기", message: "탈퇴하시면 데이터가 모두 초기화됩니다.\n탈퇴하시겠습니까?", preferredStyle: .alert)
         let cancel = UIAlertAction(title: "취소", style: .cancel)

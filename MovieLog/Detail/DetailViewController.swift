@@ -67,20 +67,10 @@ class DetailViewController: UIViewController {
     }
     
     private func callRequest(id: Int) {
-        let url = "https://api.themoviedb.org/3/movie/\(id)/images"
-        let header: HTTPHeaders = [
-            "Authorization": "Bearer \(APIKey.TMDBToken)"
-        ]
-        AF.request(url, headers: header)
-            .responseDecodable(of: Image.self) { response in
-                switch response.result {
-                case .success(let value):
-                    self.backdrops = value.backdrops
-                    DispatchQueue.main.async {
-                        self.mainView.tableView.reloadData()
-                    }
-                case .failure(let error):
-                    print("fail: \(error)")
+        NetworkManager.shared.callRequest(api: .detail(id), type: Image.self) { value in
+            self.backdrops = value.backdrops
+            DispatchQueue.main.async {
+                self.mainView.tableView.reloadData()
             }
         }
     }

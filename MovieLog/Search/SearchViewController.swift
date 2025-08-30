@@ -33,27 +33,17 @@ class SearchViewController: UIViewController {
         mainView.searchBar.delegate = self
     }
     
-    func callRequest(query: String) {
-        let url = "https://api.themoviedb.org/3/search/movie?query=\(query)&include_adult=false&language=ko-KR&page=\(page)"
-        let header: HTTPHeaders = [
-            "Authorization": "Bearer \(APIKey.TMDBToken)"
-        ]
-        AF.request(url, headers: header)
-            .responseDecodable(of: SearchResult.self) { response in
-                switch response.result {
-                case .success(let value):
-                    if self.page < value.total_pages {
-                        self.isEnd = false
-                    } else {
-                        self.isEnd = true
-                    }
-                    self.list.append(contentsOf: value.results)
-                    self.mainView.tableView.reloadData()
-                    if self.page == 1 {
-                        self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                    }
-                case .failure(let error):
-                    print("fail: \(error)")
+    private func callRequest(query: String) {        
+        NetworkManager.shared.callRequest(api: .search(query, page), type: SearchResult.self) { value in
+            if self.page < value.total_pages {
+                self.isEnd = false
+            } else {
+                self.isEnd = true
+            }
+            self.list.append(contentsOf: value.results)
+            self.mainView.tableView.reloadData()
+            if self.page == 1 {
+                self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
             }
         }
     }

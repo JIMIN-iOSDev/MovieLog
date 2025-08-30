@@ -122,7 +122,7 @@ final class MainViewController: UIViewController {
         configureLayout()
         view.backgroundColor = .black
         
-        collectionView.delegate = self
+//        collectionView.delegate = self
         movieCollectionView.delegate = self
         
         deleteAll.isHidden = UserDefaultsHelper.recentSearches.value.isEmpty
@@ -135,18 +135,8 @@ final class MainViewController: UIViewController {
     }
     
     private func callRequest() {
-        let url = "https://api.themoviedb.org/3/trending/movie/day?language=ko-KR&page=1"
-        let header: HTTPHeaders = [
-            "Authorization": "Bearer \(APIKey.TMDBToken)"
-        ]
-        AF.request(url, headers: header)
-            .responseDecodable(of: Trending.self) { response in
-                switch response.result {
-                case .success(let value):
-                    self.movieList.accept(value.results)
-                case .failure(let error):
-                    print("fail: \(error)")
-            }
+        NetworkManager.shared.callRequest(api: .main, type: Trending.self) { value in
+            self.movieList.accept(value.results)
         }
     }
 
@@ -188,10 +178,7 @@ final class MainViewController: UIViewController {
             .disposed(by: disposeBag)
         
         collectionView.rx.itemSelected
-            .withLatestFrom(searchList) { indexPath, sections in
-                return indexPath
-            }
-            .bind(with: self) { owner, indexPath in                
+            .bind(with: self) { owner, indexPath in
                 guard !UserDefaultsHelper.recentSearches.value.isEmpty else { return }
                 let vc = SearchViewController()
                 vc.text = UserDefaultsHelper.recentSearches.value[indexPath.row]

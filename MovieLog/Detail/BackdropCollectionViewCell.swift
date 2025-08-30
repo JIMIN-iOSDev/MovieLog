@@ -11,8 +11,6 @@ import Kingfisher
 
 class BackdropCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = "BackdropCollectionViewCell"
-    
     private let image = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill

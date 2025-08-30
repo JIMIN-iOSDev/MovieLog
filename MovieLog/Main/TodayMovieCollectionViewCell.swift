@@ -12,8 +12,6 @@ import RxCocoa
 
 class TodayMovieCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = "TodayMovieCollectionViewCell"
-    
     var disposeBag = DisposeBag()
     
     private let poster = {

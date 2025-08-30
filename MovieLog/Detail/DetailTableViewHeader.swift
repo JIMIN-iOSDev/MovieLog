@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 
 class DetailTableViewHeader: UITableViewHeaderFooterView {
-
-    static let identifier = "DetailTableViewHeader"
     
     private var backdrops: [Backdrops] = []
     

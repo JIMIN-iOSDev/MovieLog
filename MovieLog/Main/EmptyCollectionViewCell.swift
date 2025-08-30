@@ -10,8 +10,6 @@ import SnapKit
 
 class EmptyCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = "EmptyCollectionViewCell"
-    
     private let label = {
         let label = Label(size: 15, weight: .regular, alignment: .center)
         label.text = "최근 검색어 내역이 없습니다"

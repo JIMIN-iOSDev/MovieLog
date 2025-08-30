@@ -10,8 +10,6 @@ import SnapKit
 
 class RecentSearchCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = "RecentSearchCollectionViewCell"
-    
     var deleteAction: (() -> Void)?
     
     private let background = {

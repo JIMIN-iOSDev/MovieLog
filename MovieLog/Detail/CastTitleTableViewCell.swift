@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 
 class CastTitleTableViewCell: BaseTableViewCell {
-    
-    static let identifier = "CastTitleTableViewCell"
 
     private let title = {
         let label = Label(size: 17, weight: .bold, alignment: .left)

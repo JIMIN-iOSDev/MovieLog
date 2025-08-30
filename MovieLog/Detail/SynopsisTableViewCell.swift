@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 
 class SynopsisTableViewCell: BaseTableViewCell {
-
-    static let identifier = "SynopsisTableViewCell"
     
     let synopsis = {
         let label = Label(size: 15, weight: .regular, alignment: .left)

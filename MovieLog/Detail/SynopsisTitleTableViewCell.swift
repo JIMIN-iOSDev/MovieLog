@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 
 class SynopsisTitleTableViewCell: BaseTableViewCell {
-
-    static let identifier = "SynopsisTitleTableViewCell"
     
     var moreButtonTapped: (() -> Void)?
     

@@ -10,8 +10,6 @@ import SnapKit
 import Kingfisher
 
 class SearchTableViewCell: BaseTableViewCell {
-
-    static let identifier = "SearchTableViewCell"
     
     private let poster = {
         let image = UIImageView()

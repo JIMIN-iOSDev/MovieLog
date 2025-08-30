@@ -124,6 +124,8 @@ final class MainViewController: UIViewController {
         
         collectionView.delegate = self
         movieCollectionView.delegate = self
+        
+        deleteAll.isHidden = UserDefaultsHelper.recentSearches.value.isEmpty
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -173,20 +175,15 @@ final class MainViewController: UIViewController {
         })
                 
         UserDefaultsHelper.recentSearches
-            .map({
+            .map {
                 let items: [RecentSearchItem] = $0.isEmpty ? [.empty] : $0.map { .keyword($0) }
                 return [RecentSection(items: items)]
-            })
+            }
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
-        searchList
-            .map {
-                !($0.first?.items.contains {    // 지금 섹션은 하나 뿐이니까 first만 체크
-                    if case .keyword = $0 { return true }   // switch문으로 비교하는 걸 간단하게 작성한 것
-                    return false
-                } ?? false)
-            }
+        UserDefaultsHelper.recentSearches
+            .map { $0.isEmpty }
             .bind(to: deleteAll.rx.isHidden)
             .disposed(by: disposeBag)
         

@@ -87,6 +87,11 @@ final class MainViewController: UIViewController {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 4, left: 10, bottom: 10, right: 10)
+        if UserDefaultsHelper.recentSearches.value.isEmpty {
+            layout.itemSize = CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
+        } else {
+            layout.itemSize = CGSize(width: 85, height: 35)
+        }
         return layout
     }
     
@@ -108,6 +113,7 @@ final class MainViewController: UIViewController {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 20
         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 4, right: 10)
+        layout.itemSize = CGSize(width: 210, height: 370)
         return layout
     }
     
@@ -121,9 +127,6 @@ final class MainViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         view.backgroundColor = .black
-        
-        //collectionView.delegate = self
-        movieCollectionView.delegate = self
         
         deleteAll.isHidden = UserDefaultsHelper.recentSearches.value.isEmpty
     }
@@ -283,20 +286,6 @@ final class MainViewController: UIViewController {
             make.top.equalTo(todayMovie.snp.bottom)
             make.horizontalEdges.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
-        }
-    }
-}
-
-extension MainViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == self.collectionView {
-            if UserDefaultsHelper.recentSearches.value.isEmpty {
-                return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
-            } else {
-                return CGSize(width: 85, height: 35)
-            }
-        } else {
-            return CGSize(width: 210, height: 370)
         }
     }
 }

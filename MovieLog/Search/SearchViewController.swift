@@ -18,10 +18,10 @@ class SearchViewController: UIViewController {
     var page = 1
     var isEnd = false
     
-    
     override func loadView() {
         self.view = mainView
     }
+    
     private let disposeBag = DisposeBag()
     
     private let list = BehaviorRelay<[Result]>(value: [])
@@ -34,22 +34,6 @@ class SearchViewController: UIViewController {
         
         if let text, !text.isEmpty {
             callRequest(query: text)
-        }
-        
-        mainView.tableView.delegate = self
-    }
-    
-    private func callRequest(query: String) {        
-        NetworkManager.shared.callRequest(api: .search(query, page), type: SearchResult.self) { value in
-            if self.page < value.total_pages {
-                self.isEnd = false
-            } else {
-                self.isEnd = true
-            }
-            self.list.accept(value.results)
-            if self.page == 1 {
-                self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-            }
         }
     }
     
@@ -87,21 +71,41 @@ class SearchViewController: UIViewController {
         mainView.searchBar.rx.searchButtonClicked
             .bind(with: self) { owner, _ in
                 let text = owner.mainView.searchBar.text ?? ""
+                owner.text = text
+                owner.page = 1
                 owner.callRequest(query: text)
                 UserDefaultsHelper.saveRecentSearch(keyword: text)
                 owner.mainView.searchBar.text = ""
                 owner.view.endEditing(true)
             }
             .disposed(by: disposeBag)
+        
+        mainView.tableView.rx.willDisplayCell
+            .filter { _, indexPath in
+                return indexPath.row == (self.list.value.count - 3) && (!self.isEnd)
+            }
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
+            .bind(with: self) { owner, _ in
+                owner.page += 1
+                owner.callRequest(query: owner.text!)
+            }
+            .disposed(by: disposeBag)
     }
-}
-
-extension SearchViewController: UITableViewDelegate {
     
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.row == (list.count - 3) && isEnd == false {
-//            page += 1
-//            callRequest(query: text!)
-//        }
-//    }
+    private func callRequest(query: String) {
+        NetworkManager.shared.callRequest(api: .search(query, page), type: SearchResult.self) { value in
+            if self.page < value.total_pages {
+                self.isEnd = false
+            } else {
+                self.isEnd = true
+            }
+            
+            if self.page == 1 {
+                self.list.accept(value.results)
+                self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            } else {
+                self.list.accept(self.list.value + value.results)
+            }
+        }
+    }
 }

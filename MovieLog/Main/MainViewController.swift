@@ -119,10 +119,14 @@ final class MainViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     
+    private let viewModel = MainViewModel()
+    
+    private let callRequestTrigger = PublishRelay<Void>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        callRequest()
         bind()
+        callRequestTrigger.accept(())
         configureNav()
         configureHierarchy()
         configureLayout()
@@ -131,14 +135,10 @@ final class MainViewController: UIViewController {
         deleteAll.isHidden = UserDefaultsHelper.recentSearches.value.isEmpty
     }
     
-    private func callRequest() {
-        NetworkManager.shared.callRequest(api: .main, type: Trending.self) { value in
-            self.movieList.accept(value.results)
-        }
-    }
-
     private func bind() {
-        let input = MainViewModel.Input(deletAll: deleteAll.rx.tap)
+        let likeButtonTapped = PublishRelay<MovieInfo>()
+        let input = MainViewModel.Input(callRequestTrigger: callRequestTrigger, deletAll: deleteAll.rx.tap, likeButtonTap: likeButtonTapped)
+        let output = viewModel.transform(input: input)
         
         UserDefaultsHelper.likeMovies
             .map { "\($0.count)개의 무비박스 보관 중" }
@@ -185,25 +185,22 @@ final class MainViewController: UIViewController {
             }
             .disposed(by: disposeBag)
  
-        movieList
-            .bind(to: movieCollectionView.rx.items(cellIdentifier: TodayMovieCollectionViewCell.identifier, cellType: TodayMovieCollectionViewCell.self)) { (row, element, cell) in
+        output.movieList
+            .drive(movieCollectionView.rx.items(cellIdentifier: TodayMovieCollectionViewCell.identifier, cellType: TodayMovieCollectionViewCell.self)) { (row, element, cell) in
                 cell.configureData(row: element)
+                
+                let isLike = UserDefaultsHelper.isLike(id: element.id)
+                cell.likeButton.setImage(UIImage(systemName: isLike ? "heart.fill" : "heart"), for: .normal)
+                
                 cell.likeButton.rx.tap
-                    .asDriver()
-                    .drive(with: self) { owner, _ in
-                        if UserDefaultsHelper.isLike(id: element.id) {
-                            UserDefaultsHelper.removeLikeMovie(id: element.id)
-                            cell.likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-                        } else {
-                            UserDefaultsHelper.addLikeMovie(id: element.id)
-                            cell.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-                        }
-                    }.disposed(by: cell.disposeBag)
+                    .map { element }
+                    .bind(to: likeButtonTapped)
+                    .disposed(by: cell.disposeBag)
             }
             .disposed(by: disposeBag)
         
         movieCollectionView.rx.itemSelected
-            .withLatestFrom(movieList) { indexPath, movie in
+            .withLatestFrom(output.movieList) { indexPath, movie in
                 return movie[indexPath.row]
             }
             .bind(with: self) { owner, movie in

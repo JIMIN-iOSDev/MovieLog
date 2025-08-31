@@ -92,19 +92,23 @@ class SearchViewController: UIViewController {
     }
     
     private func callRequest(query: String) {
-        NetworkManager.shared.callRequest(api: .search(query, page), type: SearchResult.self) { value in
-            if self.page < value.total_pages {
-                self.isEnd = false
-            } else {
-                self.isEnd = true
+        NetworkManager.shared.callRequest(api: .search(query, page), type: SearchResult.self)
+            .subscribe(with: self) { owner, value in
+                if self.page < value.total_pages {
+                    self.isEnd = false
+                } else {
+                    self.isEnd = true
+                }
+                
+                if self.page == 1 {
+                    self.list.accept(value.results)
+                    self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                } else {
+                    self.list.accept(self.list.value + value.results)
+                }
+            } onFailure: { owner, error in
+                print(error)
             }
-            
-            if self.page == 1 {
-                self.list.accept(value.results)
-                self.mainView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-            } else {
-                self.list.accept(self.list.value + value.results)
-            }
-        }
+            .disposed(by: disposeBag)
     }
 }

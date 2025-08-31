@@ -131,12 +131,6 @@ final class MainViewController: UIViewController {
         deleteAll.isHidden = UserDefaultsHelper.recentSearches.value.isEmpty
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        collectionView.reloadData()
-        movieCollectionView.reloadData()
-    }
-    
     private func callRequest() {
         NetworkManager.shared.callRequest(api: .main, type: Trending.self) { value in
             self.movieList.accept(value.results)
@@ -213,10 +207,7 @@ final class MainViewController: UIViewController {
                 return movie[indexPath.row]
             }
             .bind(with: self) { owner, movie in
-                let vc = DetailViewController()
-                vc.movieTitle = movie.title
-                vc.overview = movie.overview
-                vc.movieId = movie.id
+                let vc = DetailViewController(movieTitle: movie.title, overview: movie.overview, movieId: movie.id)
                 owner.navigationController?.pushViewController(vc, animated: true)
                 owner.navigationItem.backButtonTitle = ""
             }

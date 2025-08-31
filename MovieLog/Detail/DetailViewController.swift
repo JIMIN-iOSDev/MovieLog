@@ -8,12 +8,26 @@
 import UIKit
 import Alamofire
 
-class DetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
 
     private let mainView = Detail()
-    var movieTitle: String?
-    var overview: String?
-    var movieId: Int?
+    
+    private let movieTitle: String
+    private let overview: String
+    private let movieId: Int
+    
+    init(movieTitle: String, overview: String, movieId: Int) {
+        self.movieTitle = movieTitle
+        self.overview = overview
+        self.movieId = movieId
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private var likeButton: UIBarButtonItem!
     private var synopsisExpand = false
     private var backdrops: [Backdrops] = []
@@ -27,7 +41,7 @@ class DetailViewController: UIViewController {
         setupNavigationBar()
         setupHeader()
         setupTableViewCell()
-        callRequest(id: movieId!)
+        callRequest(id: movieId)
         
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
@@ -40,17 +54,17 @@ class DetailViewController: UIViewController {
         likeButton = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
         navigationItem.rightBarButtonItem = likeButton
         navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")
-        let image = UserDefaultsHelper.isLike(id: movieId!) ? "heart.fill" : "heart"
+        let image = UserDefaultsHelper.isLike(id: movieId) ? "heart.fill" : "heart"
         likeButton.image = UIImage(systemName: image)
     }
     
     @objc func likeButtonTapped() {
-        if UserDefaultsHelper.isLike(id: movieId!) {
-            UserDefaultsHelper.removeLikeMovie(id: movieId!)
+        if UserDefaultsHelper.isLike(id: movieId) {
+            UserDefaultsHelper.removeLikeMovie(id: movieId)
         } else {
-            UserDefaultsHelper.addLikeMovie(id: movieId!)
+            UserDefaultsHelper.addLikeMovie(id: movieId)
         }
-        let image = UserDefaultsHelper.isLike(id: movieId!) ? "heart.fill" : "heart"
+        let image = UserDefaultsHelper.isLike(id: movieId) ? "heart.fill" : "heart"
         likeButton.image = UIImage(systemName: image)
     }
     

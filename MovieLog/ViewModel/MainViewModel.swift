@@ -14,7 +14,6 @@ class MainViewModel {
     private let disposeBag = DisposeBag()
     
     struct Input {
-//        let recentCellSelected: ControlEvent<IndexPath>
         let deletAll: ControlEvent<Void>
     }
     

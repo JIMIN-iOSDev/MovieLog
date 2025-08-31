@@ -57,12 +57,11 @@ class SearchViewController: UIViewController {
             .disposed(by: disposeBag)
         
         mainView.tableView.rx.itemSelected
-            .bind(with: self) { owner, indexPath in
-                let vc = DetailViewController()
-                vc.movieTitle = owner.list.value[indexPath.row].title
-                vc.overview = owner.list.value[indexPath.row].overview
-                vc.movieId = owner.list.value[indexPath.row].id
-                
+            .withLatestFrom(list) { indexPath, result in    // 내부에서 자동으로 list.value를 result에 넘겨줌
+                return result[indexPath.row]
+            }
+            .bind(with: self) { owner, result in
+                let vc = DetailViewController(movieTitle: result.title, overview: result.overview, movieId: result.id)
                 owner.navigationController?.pushViewController(vc, animated: true)
                 owner.navigationItem.backButtonTitle = ""
             }

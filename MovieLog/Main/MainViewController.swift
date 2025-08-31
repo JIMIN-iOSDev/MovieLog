@@ -122,7 +122,7 @@ final class MainViewController: UIViewController {
         configureLayout()
         view.backgroundColor = .black
         
-//        collectionView.delegate = self
+        //collectionView.delegate = self
         movieCollectionView.delegate = self
         
         deleteAll.isHidden = UserDefaultsHelper.recentSearches.value.isEmpty
@@ -141,6 +141,7 @@ final class MainViewController: UIViewController {
     }
 
     private func bind() {
+        let input = MainViewModel.Input(deletAll: deleteAll.rx.tap)
         
         UserDefaultsHelper.likeMovies
             .map { "\($0.count)개의 무비박스 보관 중" }
@@ -181,23 +182,12 @@ final class MainViewController: UIViewController {
             .bind(with: self) { owner, indexPath in
                 guard !UserDefaultsHelper.recentSearches.value.isEmpty else { return }
                 let vc = SearchViewController()
-                vc.text = UserDefaultsHelper.recentSearches.value[indexPath.row]
-                vc.likeChange = {
-                    owner.collectionView.reloadData()
-                }
+                vc.text = UserDefaultsHelper.recentSearches.value[indexPath.row]                
                 owner.navigationController?.pushViewController(vc, animated: true)
                 owner.navigationItem.backButtonTitle = ""
             }
             .disposed(by: disposeBag)
-        
-        deleteAll.rx.tap
-            .asDriver()
-            .drive(with: self) { owner, _ in
-                UserDefaultsHelper.clearRecentSearch()
-                owner.collectionView.reloadData()
-            }
-            .disposed(by: disposeBag)
-        
+ 
         movieList
             .bind(to: movieCollectionView.rx.items(cellIdentifier: TodayMovieCollectionViewCell.identifier, cellType: TodayMovieCollectionViewCell.self)) { (row, element, cell) in
                 cell.configureData(row: element)
@@ -224,9 +214,6 @@ final class MainViewController: UIViewController {
                 vc.movieTitle = movie.title
                 vc.overview = movie.overview
                 vc.movieId = movie.id
-                vc.likeChange = {
-                    
-                }
                 owner.navigationController?.pushViewController(vc, animated: true)
                 owner.navigationItem.backButtonTitle = ""
             }
@@ -243,10 +230,7 @@ final class MainViewController: UIViewController {
         searchButton.rx.tap
             .asDriver()
             .drive(with: self) { owner, _ in
-                let vc = EmptyViewController()
-                vc.searchClick = {
-                    self.collectionView.reloadData()
-                }
+                let vc = SearchViewController()                
                 owner.navigationController?.pushViewController(vc, animated: true)
                 owner.navigationItem.backButtonTitle = ""
                 owner.navigationController?.navigationBar.tintColor = UIColor(hex: "98FB98")

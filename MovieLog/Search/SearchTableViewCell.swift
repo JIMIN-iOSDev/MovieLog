@@ -8,8 +8,12 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
+import RxCocoa
 
 class SearchTableViewCell: BaseTableViewCell {
+    
+    var disposeBag = DisposeBag()
     
     private let poster = {
         let image = UIImageView()
@@ -37,6 +41,11 @@ class SearchTableViewCell: BaseTableViewCell {
         button.backgroundColor = .clear
         return button
     }()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
     
     override func configureHierarchy() {
         contentView.addSubview(poster)

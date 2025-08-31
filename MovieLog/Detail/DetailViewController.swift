@@ -15,7 +15,6 @@ class DetailViewController: UIViewController {
     var overview: String?
     var movieId: Int?
     private var likeButton: UIBarButtonItem!
-    var likeChange: (() -> Void)?
     private var synopsisExpand = false
     private var backdrops: [Backdrops] = []
     
@@ -53,7 +52,6 @@ class DetailViewController: UIViewController {
         }
         let image = UserDefaultsHelper.isLike(id: movieId!) ? "heart.fill" : "heart"
         likeButton.image = UIImage(systemName: image)
-        likeChange?()
     }
     
     private func setupHeader() {
